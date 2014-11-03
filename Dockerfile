@@ -11,7 +11,7 @@ RUN emerge $GENTOO_WORLD_PACKAGES -q
 
 # configure package
 
-RUN sed -i -e 's|^(MONGODB_IP=).*|#$1\${COREOS_PUBLIC_IPV4:-}|' /etc/conf.d/mongodb; \
+RUN sed -i  -e 's|^\(MONGODB_IP=\).*|\1\${COREOS_PUBLIC_IPV4:-}|' /etc/conf.d/mongodb; \
     rc-update add mongodb
 
 # configure runtime
