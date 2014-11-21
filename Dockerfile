@@ -11,13 +11,20 @@ RUN emerge $GENTOO_WORLD_PACKAGES -q
 
 # configure package
 
-RUN sed -i  -e 's|^\(MONGODB_IP=\).*|\1\${COREOS_PUBLIC_IPV4:-}|' /etc/conf.d/mongodb; \
-    rc-update add mongodb
+RUN chown mongodb:mongodb /var/lib/mongodb
 
 # configure runtime
 
-CMD bash -c 'rc default && sleep 10 && tailf /var/log/mongodb/mongodb.log'
-
 VOLUME /var/lib/mongodb
+
+USER mongodb
+
+ENTRYPOINT [ \
+  "mongod", \
+  "--port", "27017", \
+  "--dbpath", "/var/lib/mongodb", \
+  "--unixSocketPrefix", "/tmp" \
+]
+#CMD [ "--journal" ]
 
 EXPOSE 27017 28017
